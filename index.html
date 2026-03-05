@@ -12,20 +12,6 @@
             padding: 10px;
         }
 
-        /* Portrait Warning for Mobile */
-        .landscape-warning {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #333; color: white;
-            z-index: 9999; text-align: center;
-            padding-top: 20%; font-size: 18px;
-        }
-
-        @media screen and (max-width: 900px) and (orientation: portrait) {
-            .landscape-warning { display: block; }
-        }
-
         /* Strict A4 Constraints */
         .a4-page {
             background-color: white;
@@ -41,13 +27,14 @@
             font-size: 15.5px;
         }
 
-        /* Responsive scaling for mobile landscape */
-        @media screen and (max-width: 1000px) {
+        /* Mobile Portrait View Optimization */
+        @media screen and (max-width: 210mm) {
             body { padding: 0; }
             .a4-page {
-                transform: scale(0.8);
-                transform-origin: top center;
-                margin-top: -50px;
+                /* मोबाईल स्क्रीनवर फॉर्म फिट होण्यासाठी झूम कमी केला आहे */
+                transform: scale(calc(100vw / 210mm));
+                transform-origin: top left;
+                margin: 0;
             }
         }
 
@@ -163,7 +150,7 @@
 
         @media print {
             @page { size: A4; margin: 0; }
-            .controls, .landscape-warning { display: none; }
+            .controls { display: none; }
             body { background: none; padding: 0; }
             .a4-page { 
                 box-shadow: none; 
@@ -171,16 +158,12 @@
                 width: 210mm; 
                 height: 297mm; 
                 padding: 12mm 18mm; 
-                transform: scale(1); /* Ensure 100% size on print */
+                transform: scale(1); /* प्रिंट करताना ओरिजनल साइजमध्ये येईल */
             }
         }
     </style>
 </head>
 <body>
-
-<div class="landscape-warning">
-    🔄 कृपया चांगल्या व्ह्यूसाठी तुमचा फोन आडवा (Landscape) करा.
-</div>
 
 <div class="controls">
     <button class="btn print-btn" onclick="window.print()">फॉर्म प्रिंट करा (Print)</button>
