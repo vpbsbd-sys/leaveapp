@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shivaji University Leave Form</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+            padding: 10px;
+        }
+
+        /* Optimized A4 Page Constraints */
+        .a4-page {
+            background-color: white;
+            width: 210mm;
+            height: 297mm; /* Fixed height to ensure single page */
+            margin: 0 auto;
+            padding: 12mm 15mm; /* Balanced padding */
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            line-height: 1.4; /* Slightly tighter for fit */
+            position: relative;
+            overflow: hidden; /* Prevents text from spilling to page 2 */
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .header h2 { margin: 2px 0; font-size: 20px; }
+        .header h3 { margin: 2px 0; font-size: 17px; }
+        .header p { margin: 1px 0; font-size: 13px; }
+
+        .top-info {
+            float: right;
+            width: 300px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .input-line {
+            border: none;
+            border-bottom: 1px dotted #000;
+            outline: none;
+            padding: 0 5px;
+            background: transparent;
+        }
+
+        .address-section {
+            clear: both;
+            margin-top: 10px;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        .subject {
+            text-align: center;
+            font-weight: bold;
+            margin: 12px 0;
+            text-decoration: underline;
+            font-size: 15px;
+        }
+
+        .body-text {
+            text-align: justify;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+
+        .body-text input[type="text"], .body-text input[type="date"] {
+            border: none;
+            border-bottom: 1px dotted #000;
+            outline: none;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 6px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .signature-section {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer-section {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+
+        .controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .print-btn { background: #007bff; color: white; }
+        .voice-btn { background: #28a745; color: white; }
+        .voice-btn.listening { background: #dc3545; animation: pulse 1.5s infinite; }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        @media print {
+            @page { size: A4; margin: 0; }
+            body { background: none; padding: 0; }
+            .controls { display: none; }
+            .a4-page { 
+                box-shadow: none; 
+                margin: 0; 
+                width: 210mm; 
+                height: 297mm; 
+                padding: 10mm 15mm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="controls">
+    <button class="btn print-btn" onclick="window.print()">फॉर्म प्रिंट करा</button>
+    <button id="voiceStart" class="btn voice-btn" onclick="startSpeech()">माहिती बोलून भरा (Voice)</button>
+</div>
+
+<div class="a4-page">
+    <div class="header">
+        <img src="https://www.unishivaji.ac.in/img/logo.png" alt="University Logo" style="width: 50px; height: 50px;">
+        <h2>शिवाजी विद्यापीठ, कोल्हापूर</h2>
+        <h3>रजा मागणी अर्ज</h3>
+        <p>(सर्व नियमित शिक्षक यांच्यासाठी)</p>
+    </div>
+
+    <div class="top-info">
+        नाव - <input type="text" class="input-line" style="width: 230px;"><br>
+        पदनाम - <input type="text" class="input-line" style="width: 220px;"><br>
+        अधिविभाग - <input type="text" class="input-line" style="width: 210px;"><br>
+        भ्रमणध्वनी नंबर - <input type="text" class="input-line" style="width: 175px;"><br>
+        दिनांक - <input type="date" class="input-line" style="width: 220px;">
+    </div>
+
+    <div class="address-section">
+        प्रति,<br>
+        मा. कुलसचिव,<br>
+        शिवाजी विद्यापीठ, कोल्हापूर.
+    </div>
+
+    <div class="subject">
+        विषय - किरकोळ / अर्जित / अर्धवेतनी (कम्युटेड) / कार्यरत (On Duty) / कर्तव्य (Duty) रजा मागणीबाबत.
+    </div>
+
+    <div class="body-text">
+        महोदय,<br>
+        मला दि. <input type="date"> ते दि. <input type="date"> अशी <input type="text" style="width: 35px;"> दिवस किरकोळ / अर्जित / अर्धवेतनी (कम्युटेड) / कार्यरत (On Duty) / कर्तव्य (Duty) ही रजा मंजूर करण्याविषयीची पुढील कार्यवाही करावी, ही विनंती.<br>
+        १) सदरची रजा ही किरकोळ / अर्जित रजा असून ती घरगुती / वैयक्तिक / अन्य <input type="text" style="width: 140px;"> कारणास्तव घेत आहे.<br>
+        <div style="text-align: center; margin: 5px 0; font-weight: bold;">किंवा</div>
+        २) सदर रजेच्या कारणाच्या पृष्ठबर्थ मी वैद्यकीय दाखला (Medical Certificate) / कार्यालयीन आदेश / निमंत्रण पत्र / नोंदणी पत्र / उपस्थिती पत्र या अर्जाच्या सोबत जोडले आहे.
+    </div>
+
+    <div style="text-align: right; margin-top: 20px;">
+        आपला / आपली विश्वासू,<br><br><br>
+        (नाव <input type="text" class="input-line" style="width: 200px;">)<br>
+        पदनाम <input type="text" class="input-line" style="width: 180px;">
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>अ. क्र.</th>
+                <th>रजेचा प्रकार (किरकोळ/अर्जित/कर्तव्य/इ.)</th>
+                <th>उपभोगलेल्या रजा</th>
+                <th>एकूण शिल्लक रजा</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>१</td>
+                <td><input type="text" style="border:none; width: 100%;"></td>
+                <td><input type="text" style="border:none; width: 100%;"></td>
+                <td><input type="text" style="border:none; width: 100%;"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer-section">
+        <strong>मा. अधिविभागप्रमुख / संचालक / समन्वयक यांच्यामार्फत सादर -</strong><br>
+        श्री. / श्रीमती / डॉ. <input type="text" class="input-line" style="width: 280px;"> यांची रजा शिफारस / मंजूर करण्यात येत आहे / नाही.<br>
+        <div class="signature-section">
+            <div style="text-align: center;">
+                <br>अधिविभागप्रमुख / संचालक / समन्वयक<br>सही व शिक्का
+            </div>
+            <div style="text-align: center;">
+                <br>मा. प्र-कुलगुरू
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentInput = null;
+
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('focus', () => {
+            currentInput = input;
+        });
+    });
+
+    function startSpeech() {
+        if (!('webkitSpeechRecognition' in window)) {
+            alert("तुमचा ब्राउझर व्हॉइस टायपिंगला सपोर्ट करत नाही. कृपया Google Chrome वापरा.");
+            return;
+        }
+
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'mr-IN'; 
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        const btn = document.getElementById('voiceStart');
+        
+        recognition.onstart = () => {
+            btn.classList.add('listening');
+            btn.innerText = "बोलणे चालू आहे...";
+        };
+
+        recognition.onresult = (event) => {
+            const speechResult = event.results[0][0].transcript;
+            if (currentInput) {
+                if(currentInput.type === 'date') {
+                    alert("कृपया तारीख मॅन्युअली निवडा.");
+                } else {
+                    currentInput.value = speechResult;
+                }
+            } else {
+                alert("आधी कोणत्याही एका रकान्यावर (Input) क्लिक करा, मग बोला.");
+            }
+        };
+
+        recognition.onspeechend = () => {
+            recognition.stop();
+            btn.classList.remove('listening');
+            btn.innerText = "माहिती बोलून भरा (Voice)";
+        };
+
+        recognition.onerror = (event) => {
+            btn.classList.remove('listening');
+            btn.innerText = "माहिती बोलून भरा (Voice)";
+            console.error(event.error);
+        };
+
+        recognition.start();
+    }
+</script>
+
+</body>
+</html>
