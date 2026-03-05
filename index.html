@@ -2,9 +2,11 @@
 <html lang="mr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Shivaji University Leave Form</title>
     <style>
+        * { box-sizing: border-box; }
+        
         body {
             background-color: #f0f0f0;
             font-family: 'Times New Roman', serif;
@@ -15,32 +17,33 @@
             align-items: center;
         }
 
-        /* Strict A4 Constraints */
+        /* A4 Page Styling */
         .a4-page {
             background-color: white;
             width: 210mm;
-            height: 297mm;
+            min-height: 297mm;
             padding: 12mm 18mm; 
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            box-sizing: border-box;
             line-height: 1.7;
-            overflow: hidden;
             position: relative;
             font-size: 15.5px;
         }
 
-        /* मोबाईल व्ह्यूसाठी सुधारणा */
-        @media screen and (max-width: 210mm) {
+        /* Mobile View Correction - Form will cover full screen width */
+        @media screen and (max-width: 600px) {
             body { 
-                padding-bottom: 80px; /* बटणांसाठी खाली जागा सोडली */
+                padding-bottom: 70px; /* Space for buttons at bottom */
             }
             .a4-page {
-                /* फॉर्म मोबाईल स्क्रीनच्या रुंदीनुसार सेट केला */
-                transform: scale(calc(100vw / 210mm));
-                transform-origin: top left;
-                margin: 0;
-                box-shadow: none;
+                width: 100vw; /* Covers full screen width */
+                height: auto;
+                min-height: 100vh;
+                padding: 10px 15px;
+                transform: none; /* Removed transform to avoid half-screen issue */
+                font-size: 14px; /* Slightly smaller for mobile readability */
             }
+            .top-info { width: 100% !important; float: none !important; }
+            .input-line { width: 60% !important; }
         }
 
         .header {
@@ -66,7 +69,7 @@
             outline: none;
             padding: 0 5px;
             background: transparent;
-            font-size: 15.5px;
+            font-size: 15px;
         }
 
         .address-section {
@@ -93,25 +96,21 @@
             border-bottom: 1px dotted #000;
             outline: none;
             text-align: center;
-            font-family: inherit;
-            font-size: 15.5px;
+            font-size: 15px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 15px 0;
-            page-break-inside: avoid;
         }
 
-        table, th, td {
-            border: 1px solid black;
-        }
+        table, th, td { border: 1px solid black; }
 
         th, td {
             padding: 8px;
             text-align: center;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .signature-section {
@@ -127,30 +126,31 @@
             padding-top: 12px;
         }
 
-        /* बटणे आता मजकुराच्या वर येणार नाहीत - खाली स्थिर राहतील */
+        /* Corrected Buttons - Sticky at Bottom */
         .controls {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(255, 255, 255, 0.9);
+            background: #fff;
             padding: 10px;
             display: flex;
             justify-content: center;
             gap: 10px;
-            z-index: 2000;
+            z-index: 9999;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
         }
 
         .btn {
-            padding: 10px 15px;
+            padding: 12px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
             font-size: 14px;
             flex: 1;
-            max-width: 200px;
+            max-width: 180px;
+            text-align: center;
         }
 
         .print-btn { background: #007bff; color: white; }
@@ -167,9 +167,7 @@
                 box-shadow: none; 
                 margin: 0 auto; 
                 width: 210mm; 
-                height: 297mm; 
                 padding: 12mm 18mm; 
-                transform: scale(1);
             }
         }
     </style>
@@ -237,7 +235,7 @@
 
     <div class="footer-section">
         <strong>मा. अधिविभागप्रमुख / संचालक / समन्वयक यांच्यामार्फत सादर -</strong><br>
-        श्री. / श्रीमती / डॉ. <input type="text" class="input-line" style="width: 300px;"> यांची रजा शिफारस करण्यात येत आहे / नाही.<br>
+        श्री. / श्रीमती / डॉ. <input type="text" class="input-line" style="width: 250px;"> यांची रजा शिफारस करण्यात येत आहे / नाही.<br>
         
         <div class="signature-section">
             <div style="text-align: center;">
@@ -252,7 +250,7 @@
 
 <div class="controls">
     <button class="btn print-btn" onclick="window.print()">फॉर्म प्रिंट करा (Print)</button>
-    <button id="voiceStart" class="btn voice-btn" onclick="startSpeech()">व्हॉइस टाइपिंग (Marathi)</button>
+    <button id="voiceStart" class="btn voice-btn" onclick="startSpeech()">व्हॉइस टायपिंग</button>
 </div>
 
 <script>
@@ -263,7 +261,7 @@
 
     function startSpeech() {
         if (!('webkitSpeechRecognition' in window)) {
-            alert("कृपया Google Chrome ब्राउझर वापरा."); return;
+            alert("कृपया Google Chrome वापरा."); return;
         }
         const recognition = new webkitSpeechRecognition();
         recognition.lang = 'mr-IN';
@@ -271,7 +269,7 @@
         
         recognition.onstart = () => {
             btn.classList.add('listening');
-            btn.innerText = "बोलणे रेकॉर्ड होत आहे...";
+            btn.innerText = "बोलत राहा...";
         };
 
         recognition.onresult = (event) => {
@@ -284,7 +282,7 @@
 
         recognition.onend = () => {
             btn.classList.remove('listening');
-            btn.innerText = "व्हॉइस टाइपिंग (Marathi)";
+            btn.innerText = "व्हॉइस टायपिंग";
         };
 
         recognition.start();
