@@ -1,4 +1,115 @@
-@media print {
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Shivaji University Leave Form Generator</title>
+    <style>
+        * { box-sizing: border-box; } /* हे इनपुट बॉक्स बाहेर जाण्यापासून रोखते */
+        
+        body {
+            background-color: #f0f0f0;
+            font-family: 'Times New Roman', serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Input Panel सुधारित अलाइनमेंट */
+        .input-panel {
+            background: #fff;
+            width: 95%;
+            max-width: 900px;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .input-group { 
+            display: flex; 
+            flex-direction: column; 
+            width: 100%;
+        }
+
+        .input-group label { font-weight: bold; margin-bottom: 5px; font-size: 14px; }
+        
+        .input-group input, .input-group select { 
+            width: 100%; /* पूर्ण रुंदी व्यापण्यासाठी */
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        /* A4 Page Styling */
+        .a4-page {
+            background-color: white;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 12mm 18mm; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            line-height: 1.7;
+            position: relative;
+            font-size: 15.5px;
+            margin-bottom: 100px;
+        }
+
+        /* Mobile View Optimization */
+        @media screen and (max-width: 600px) {
+            .input-panel { 
+                grid-template-columns: 1fr; /* मोबाईलवर सर्व एकाखाली एक */
+                width: 92%; 
+                margin: 10px;
+            }
+            .a4-page { 
+                width: 100vw; 
+                padding: 10px 15px; 
+                transform: none; 
+                font-size: 14px; 
+            }
+            .input-group div[style*="display: flex"] {
+                flex-wrap: wrap; /* डेट पिकर खाली येण्यासाठी */
+            }
+        }
+
+        .header { text-align: center; margin-bottom: 10px; line-height: 1.3; }
+        .header img { width: 55px; height: 55px; }
+        .header h2 { margin: 2px 0; font-size: 22px; font-weight: bold; }
+        .header h3 { margin: 2px 0; font-size: 19px; }
+
+        .top-info-display { float: right; width: 350px; margin-bottom: 15px; }
+        .display-line { border-bottom: 1px dotted #000; min-width: 180px; display: inline-block; padding: 0 5px; }
+
+        .address-section { clear: both; margin-top: 5px; margin-bottom: 15px; }
+        .subject { text-align: center; font-weight: bold; margin: 15px 0; text-decoration: underline; line-height: 1.5; }
+        .body-text { text-align: justify; margin-bottom: 15px; }
+
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        table, th, td { border: 1px solid black; }
+        th, td { padding: 8px; text-align: center; font-size: 13px; }
+
+        .signature-section { margin-top: 40px; display: flex; justify-content: space-between; }
+        .footer-section { margin-top: 25px; border-top: 1px solid #aaa; padding-top: 12px; }
+
+        .controls {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: #fff; padding: 10px; display: flex;
+            justify-content: center; gap: 10px; z-index: 9999;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; flex: 1; max-width: 180px; text-align: center; }
+        .print-btn { background: #007bff; color: white; }
+        .voice-btn { background: #28a745; color: white; }
+
+       @media print {
     @page { 
         size: A4; 
         margin: 5mm 10mm; /* मार्जिन कमी केल्यामुळे जास्त मजकूर एका पानावर बसेल */
@@ -31,3 +142,259 @@
 
     table { margin: 10px 0; }
 }
+    </style>
+</head>
+<body>
+
+<div class="input-panel">
+    <div class="input-group">
+        <label>तुमचे नाव:</label>
+        <input type="text" id="inName" placeholder="नाव प्रविष्ट करा" oninput="updateForm()">
+    </div>
+    
+    <div class="input-group">
+        <label>पदनाम (Designation):</label>
+        <select id="inPost" onchange="updateForm()">
+            <option value="">निवडा...</option>
+            <option value="सहाय्यक प्राध्यापक (Assistant Professor)">सहाय्यक प्राध्यापक (Assistant Professor)</option>
+            <option value="सहयोगी प्राध्यापक (Associate Professor)">सहयोगी प्राध्यापक (Associate Professor)</option>
+            <option value="प्राध्यापक (Professor)">प्राध्यापक (Professor)</option>
+            <option value="सहाय्यक प्राध्यापक/सहाय्यक संचालक (Assistant Professor/Assistant Director)">सहाय्यक प्राध्यापक/सहाय्यक संचालक (Assistant Professor/Assistant Director)</option>
+            <option value="सहयोगी प्राध्यापक/सहसंचालक(Associate Professor/Associate Director)">सहयोगी प्राध्यापक/सहसंचालक(Associate Professor/Associate Director)</option>
+ <option value="प्राध्यापक/संचालक (Professor/Director)">प्राध्यापक/संचालक (Professor/Director)</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label>अधिविभाग (Department):</label>
+        <select id="inDeptSelect" onchange="toggleDeptInput()">
+            <option value="">निवडा...</option>
+            <option value="Department of Agrochemicals And Pest Management">Department of Agrochemicals And Pest Management</option>
+            <option value="Department of Bio-Chemistry">Department of Bio-Chemistry</option>
+            <option value="Department of Biotechnology">Department of Biotechnology</option>
+            <option value="Department of Botany">Department of Botany</option>
+            <option value="Department of Chemistry">Department of Chemistry</option>
+            <option value="Department of Industrial Chemistry">Department of Industrial Chemistry</option>
+            <option value="Department of Commerce and Management">Department of Commerce and Management</option>
+            <option value="Department of Commerce and Management - M.B.A.">Department of Commerce and Management - M.B.A.</option>
+            <option value="Department of Computer Science">Department of Computer Science</option>
+            <option value="Department of Economics:Autonomous">Department of Economics:Autonomous</option>
+            <option value="Department of Education">Department of Education</option>
+            <option value="Department of Electronics">Department of Electronics</option>
+            <option value="Department of English">Department of English</option>
+            <option value="Department of Environment Science">Department of Environment Science</option>
+            <option value="Department of Food Science & Technology">Department of Food Science & Technology</option>
+            <option value="Department of Foreign Languages">Department of Foreign Languages</option>
+            <option value="Department of Geography">Department of Geography</option>
+            <option value="Department of Hindi">Department of Hindi</option>
+            <option value="Department of History">Department of History</option>
+            <option value="Department of Journalism & Communication">Department of Journalism & Communication</option>
+            <option value="Department of Law">Department of Law</option>
+            <option value="Department of Library & Information Science">Department of Library & Information Science</option>
+            <option value="Department of Lifelong Learning and Extension">Department of Lifelong Learning and Extension</option>
+            <option value="Department of Marathi">Department of Marathi</option>
+            <option value="Department of Mathematics">Department of Mathematics</option>
+            <option value="Department of Mass Communication">Department of Mass Communication</option>
+            <option value="Department of Microbiology">Department of Microbiology</option>
+            <option value="Department of Music and Dramatics">Department of Music and Dramatics</option>
+            <option value="Department of Physics">Department of Physics</option>
+            <option value="Department of Political Science">Department of Political Science</option>
+            <option value="Department of Psychology">Department of Psychology</option>
+            <option value="Department of Sociology">Department of Sociology</option>
+            <option value="Department of Sports">Department of Sports</option>
+            <option value="Department of Statistics">Department of Statistics</option>
+            <option value="Department of Technology">Department of Technology</option>
+            <option value="Department of Zoology">Department of Zoology</option>
+            <option value="School of Nanoscience and Technology">School of Nanoscience and Technology</option>
+            <option value="Yashwantrao Chavan School of Rural Development">Yashwantrao Chavan School of Rural Development</option>
+            <option value="UGC CENTER FOR COACHING FOR COMPETITIVE EXAMINATIONS">UGC CENTER FOR COACHING FOR COMPETITIVE EXAMINATIONS</option>
+            <option value="Other">इतर (Other)</option>
+        </select>
+        <input type="text" id="inDeptOther" placeholder="विभागाचे नाव प्रविष्ट करा" style="display:none; margin-top:5px;" oninput="updateForm()">
+    </div>
+
+    <div class="input-group">
+       <label>भ्रमणध्वनी (१० अंकी):</label>
+        <input type="tel" id="inPhone" placeholder="उदा. 98XXXXXXXX" maxlength="10" pattern="[0-9]{10}"  oninput="this.value = this.value.replace(/[^0-9]/g, ''); updateForm();" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+    </div>
+    
+    <div class="input-group">
+        <label>रजेचा प्रकार:</label>
+        <select id="inLeaveType" onchange="updateForm()">
+            <option value="किरकोळ">किरकोळ रजा</option>
+            <option value="अर्जित">अर्जित रजा</option>
+            <option value="अर्धवेतनी (कम्युटेड)">अर्धवेतनी (कम्युटेड)</option>
+            <option value="कार्यरत (On Duty)">कार्यरत (On Duty)</option>
+            <option value="कर्तव्य (Duty)">कर्तव्य (Duty)</option>
+        </select>
+    </div>
+    
+    <div class="input-group">
+    <label>दिवस आणि दिनांक:</label>
+    <div style="display: flex; gap: 5px; width: 100%;">
+        <input type="number" id="inDays" placeholder="दिवस" style="flex: 0.5;" oninput="updateForm()">
+        
+        <input type="date" id="inDateFrom" style="flex: 1;" 
+               onchange="document.getElementById('inDateTo').min = this.value; updateForm();">
+        
+        <input type="date" id="inDateTo" style="flex: 1;" onchange="updateForm()">
+    </div>
+</div>
+</div>
+
+<div class="a4-page" id="formArea">
+    <div class="header">
+        <img src="https://www.unishivaji.ac.in/img/logo.png" alt="University Logo">
+        <h2>शिवाजी विद्यापीठ, कोल्हापूर</h2>
+        <h3>रजा मागणी अर्ज</h3>
+        <p>(सर्व नियमित शिक्षक यांच्यासाठी)</p>
+    </div>
+
+    <div class="top-info-display">
+        नाव - <span class="display-line" id="outName"></span><br>
+        पदनाम - <span class="display-line" id="outPost"></span><br>
+        अधिविभाग - <span class="display-line" id="outDept"></span><br>
+        भ्रमणध्वनी - <span class="display-line" id="outPhone"></span><br>
+        दिनांक - <span class="display-line" id="outToday"></span>
+    </div>
+
+    <div class="address-section">
+        प्रति,<br>
+        मा. कुलसचिव,<br>
+        शिवाजी विद्यापीठ, कोल्हापूर.
+    </div>
+
+    <div class="subject">
+        विषय - <span id="outSubjectType">किरकोळ</span> रजा मागणीबाबत.
+    </div>
+
+    <div class="body-text">
+        महोदय,<br>
+        मला दि. <span id="outDateFrom" style="font-weight:bold;">____</span> ते दि. <span id="outDateTo" style="font-weight:bold;">____</span> अशी एकूण <span id="outDays" style="font-weight:bold;">__</span> दिवस <span id="outBodyType" style="font-weight:bold;">किरकोळ</span> ही रजा मंजूर करण्याविषयीची विनंती.<br><br>
+        १) सदरची रजा ही <span id="outReasonType">किरकोळ</span> रजा असून ती घरगुती / वैयक्तिक कारणास्तव घेत आहे.<br>
+        <div style="text-align: center; margin: 5px 0; font-weight: bold;">- किंवा -</div>
+        २) रजेच्या कारणास्तव मी वैद्यकीय दाखला / कार्यालयीन आदेश / निमंत्रण पत्र अर्जासोबत जोडले आहे.
+    </div>
+
+    <div style="text-align: right; margin-top: 20px;">
+        आपला / आपली विश्वासू,<br><br><br>
+        (<span id="outSignName">__________</span>)<br>
+        पदनाम: <span id="outSignPost">__________</span>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 10%;">अ. क्र.</th>
+                <th style="width: 45%;">रजेचा प्रकार</th>
+                <th style="width: 22.5%;">उपभोगलेल्या रजा</th>
+                <th style="width: 22.5%;">एकूण शिल्लक रजा</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>१</td>
+                <td id="outTableType">किरकोळ</td>
+                <td><input type="text" style="border:none; width: 100%; text-align:center;"></td>
+                <td><input type="text" style="border:none; width: 100%; text-align:center;"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer-section">
+        <strong>मा. अधिविभागप्रमुख / संचालक / समन्वयक यांच्यामार्फत सादर -</strong><br>
+        श्री. / श्रीमती / डॉ. <span id="outFooterName" style="border-bottom: 1px dotted #000; min-width: 200px; display: inline-block;"></span> यांची रजा शिफारस करण्यात येत आहे / नाही.<br>
+        <div class="signature-section">
+            <div style="text-align: center;">अधिविभागप्रमुख / संचालक<br>(सही व शिक्का)</div>
+            <div style="text-align: center;">मा. प्र-कुलगुरू</div>
+        </div>
+    </div>
+</div>
+
+<div class="controls">
+    <button class="btn print-btn" onclick="window.print()">अर्ज प्रिंट करा</button>
+    <button id="voiceStart" class="btn voice-btn" onclick="startSpeech()">व्हॉइस टाइपिंग</button>
+</div>
+
+<script>
+    document.getElementById('outToday').innerText = new Date().toLocaleDateString('mr-IN');
+
+    function toggleDeptInput() {
+        let select = document.getElementById('inDeptSelect');
+        let otherInput = document.getElementById('inDeptOther');
+        if (select.value === 'Other') {
+            otherInput.style.display = 'block';
+        } else {
+            otherInput.style.display = 'none';
+        }
+        updateForm();
+    }
+
+   function updateForm() {
+    // नाव आणि इतर माहिती अपडेट करणे
+    document.getElementById('outName').innerText = document.getElementById('inName').value;
+    document.getElementById('outPost').innerText = document.getElementById('inPost').value;
+    
+    let deptSelect = document.getElementById('inDeptSelect').value;
+    let deptFinal = (deptSelect === 'Other') ? document.getElementById('inDeptOther').value : deptSelect;
+    document.getElementById('outDept').innerText = deptFinal;
+    
+    document.getElementById('outPhone').innerText = document.getElementById('inPhone').value;
+    document.getElementById('outSignName').innerText = document.getElementById('inName').value || "__________";
+    document.getElementById('outSignPost').innerText = document.getElementById('inPost').value || "__________";
+    document.getElementById('outFooterName').innerText = document.getElementById('inName').value;
+
+    let lType = document.getElementById('inLeaveType').value;
+    document.getElementById('outSubjectType').innerText = lType;
+    document.getElementById('outBodyType').innerText = lType;
+    document.getElementById('outReasonType').innerText = lType;
+    document.getElementById('outTableType').innerText = lType;
+
+    // --- स्वयंचलित तारीख मोजण्याचे लॉजिक (Automatic Date Calculation) ---
+    let daysInput = document.getElementById('inDays').value;
+    let fromDateInput = document.getElementById('inDateFrom').value;
+    
+    if (daysInput && fromDateInput) {
+        let startDate = new Date(fromDateInput);
+        let daysCount = parseInt(daysInput);
+        
+        if (daysCount > 0) {
+            // रजेचा शेवटचा दिवस मोजणे (सुरुवात तारीख + दिवस - 1)
+            let endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + (daysCount - 1));
+            
+            // YYYY-MM-DD फॉरमॅटमध्ये तारीख सेट करणे
+            let formattedEndDate = endDate.toISOString().split('T')[0];
+            document.getElementById('inDateTo').value = formattedEndDate;
+        }
+    }
+
+    // डिस्प्ले अपडेट करणे
+    document.getElementById('outDays').innerText = document.getElementById('inDays').value || "__";
+    document.getElementById('outDateFrom').innerText = document.getElementById('inDateFrom').value || "____";
+    document.getElementById('outDateTo').innerText = document.getElementById('inDateTo').value || "____";
+}
+
+    let currentInput = null;
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('focus', () => currentInput = input);
+    });
+
+    function startSpeech() {
+        if (!('webkitSpeechRecognition' in window)) { alert("कृपया Chrome वापरा."); return; }
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'mr-IN';
+        recognition.onstart = () => document.getElementById('voiceStart').innerText = "बोलत राहा...";
+        recognition.onresult = (event) => {
+            if (currentInput) {
+                currentInput.value = event.results[0][0].transcript;
+                updateForm();
+            } else { alert("आधी रकान्यावर क्लिक करा!"); }
+        };
+        recognition.onend = () => document.getElementById('voiceStart').innerText = "व्हॉइस टाइपिंग";
+        recognition.start();
+    }
+</script>
+
+</body>
+</html>
